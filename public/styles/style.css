@@ -1,0 +1,179 @@
+html {
+	font-family: 'Lato', sans-serif;
+	color: var(--primary-text-color);
+}
+body {
+	margin: 0;
+	width: 100vw;
+	height: 100vh;
+	overflow:hidden;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 1fr;
+	grid-template-areas: 
+	'header header '
+	'sidebar content '
+	'sidebar input ';
+}
+/* header */
+.header {
+	grid-area: header;
+	background-color: var(--default-bg-color);
+	height: 10vh;
+	width: 100vw;
+	display: grid;
+	grid-template-Columns: 50vw auto auto 10vw;
+}
+.header div:not(:first-child) {
+	text-align: right;
+	align-self: flex-end;
+}
+.header div:last-child {
+	margin: auto;
+}
+.header h1 {
+	position: relative;
+	margin: auto;
+	font-family: 'Lato', sans-serif !important;
+	font-size: 2rem;
+}
+.header span {
+	position: relative;
+	font-size: 6vh;
+	top: 1vh;
+}
+.header button {
+	background-color: var(--default-bg-color);
+	border: none;
+	margin: auto;
+}
+/* user login */
+.user-info {
+	width: max-content;
+	font-weight: bold;
+  font-size: 2rem;
+	display: inline-flex;
+}
+.user-info > #user-name {
+	margin: auto;
+}
+#user-pic {
+  background-image: url('/images/profile_placeholder.png');
+  background-repeat: no-repeat;
+  height: 10vh;
+	width: 10vh;
+  background-size: 10vh;
+  border-radius: 50%;
+}
+/* sidebar */
+.sidebar {
+	grid-area: sidebar;
+	background-color: var(--default-bg-color);
+	width: 15vw;
+	height: 90vh;
+	display: grid;
+	grid-template-columns: 1fr;
+	grid-template-rows: 10.42vh;
+	align-content: flex-start;
+	text-align: center;
+	font-size: 1.25em;
+}
+.sidebar > a {
+	height: 5vh;
+}
+.sidebar > a:hover {
+	background: #555
+}
+.sidebar > .active {
+	background: #EE6352;
+}
+
+/* content */
+.content {
+	align-content: flex-start;
+	grid-area: content;
+	display: grid;
+	overflow-y: scroll;
+	scrollbar-width: thin;
+	scrollbar-color: auto;
+	scroll-behavior: smooth;
+	overflow-x: hidden;
+	grid-template-columns: 1fr;
+	grid-template-rows: repeat(5 1fr);
+	background-color: var(--accent-bg-color);
+	width: 85vw;
+	height: 77.5vh;
+	font-family: 'Oswald', sans-serif;
+}
+.content > div:not(.mCustomScrollBox) {
+	opacity: 0;
+	transition: opacity 0.75s linear;
+	border-top: 1px solid #23272a !important;
+	display: grid;
+	grid-template-columns: 50px auto;
+	grid-template-areas: 
+		'Pic User'
+		'Pic Msg';
+}
+.content > .visible {
+	opacity: 1 !important;
+}
+.content > div > .pic {
+	grid-area: Pic;
+	background-image: url('/images/profile_placeholder.png');
+  background-repeat: no-repeat;
+  width: 50px;
+  height: 50px;
+  background-size: 50px;
+  border-radius: 40px;
+  margin-right: 5px;
+}
+.content > div > .name {
+	grid-area: User;
+}
+.content > div > .message {
+	grid-area: Msg;
+	padding: 0;
+}
+/* input */
+.input {
+	grid-area: input;
+	background-color: var(--input-bg-color);
+	height: 12.5vh;
+	bottom: 0;
+}
+.container {
+	display: flex;
+	margin: 2.25vh 2.25vh 2.25vh 2.25vh;
+	max-width: 80.5vw;
+	height: 8vh;
+	background-color: var(--inputbox-color);
+	border-radius: 32px;
+}
+.container .input-area {
+	margin: 2vh 0.5vw 2vh 0.5vw;
+	width: 82vw;
+	height: 4vh;
+	overflow-y: scroll;
+	overflow-wrap: break-word;
+	word-wrap: break-word;
+	hyphens: auto;
+}
+.container button:first-child {
+	border-radius: 32px 0 0 32px;
+	background-color: var(--inputbox-color);
+	border: 0;
+}
+.container button:last-child {
+	border-radius: 0 32px 32px 0;
+	background-color: var(--inputbox-color);
+	border: 0;
+}
+[contenteditable]:focus {
+    outline: 0px solid transparent;
+}
+.container button:last-child[disabled] {
+    color:rgba(0,0,0,.26);
+    cursor:default;
+    background-color:transparent
+}

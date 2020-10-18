@@ -1,0 +1,131 @@
+<!doctype html>
+<html lang="en">
+	<head>
+		<meta charset="utf-8">
+		<meta http-equiv="X-UA-Compatible" content="IE=edge">
+		<meta name="description" content="An Online Chat Service">
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<title>chatter</title>
+		<link rel="icon" href="images/icon.png">
+		<meta name="msapplication-tap-highlight" content="no">
+		<link rel="manifest" href="manifest.json">
+		<meta name="mobile-web-app-capable" content="yes">
+		<meta name="application-name" content="Chatter">
+		<meta name="theme-color" content="#202225">
+		<meta name="apple-mobile-web-app-capable" content="yes">
+		<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent">
+		<meta name="apple-mobile-web-app-title" content="Chatter">
+		<meta name="apple-mobile-web-app-status-bar-style" content="#202225">
+		<meta name="msapplication-TileColor" content="#202225">
+		<meta name="msapplication-navbutton-color" content="#202225">
+		<!-- fonts -->
+		<link href="https://fonts.googleapis.com/css2?family=Lato&family=Oswald&family=Material+Icons&display=swap" rel="stylesheet"> 
+		<!-- css -->
+		<link rel="stylesheet" href="styles/palette.css">
+		<link rel="stylesheet" href="styles/style.css">
+		<script type="text/javascript">
+			! function(n, e) {
+        var t, o, i, c = [],
+        f = {
+          passive: !0,
+          capture: !0
+      	},
+        r = new Date,
+        a = "pointerup",
+        u = "pointercancel";
+        function p(n, c) {
+          t || (t = c, o = n, i = new Date, w(e), s())
+        }
+        function s() {
+          o >= 0 && o < i - r && (c.forEach(function(n) {
+            n(o, t)
+          }), c = [])
+        }
+        function l(t) {
+          if (t.cancelable) {
+            var o = (t.timeStamp > 1e12 ? new Date : performance.now()) - t.timeStamp;
+            "pointerdown" == t.type ? function(t, o) {
+              function i() {
+                p(t, o), r()
+              }
+              function c() {
+                r()
+              }
+              function r() {
+                e(a, i, f), e(u, c, f)
+              }
+              n(a, i, f), n(u, c, f)
+            }(o, t) : p(o, t)
+          }
+        }
+        function w(n) {
+          ["click", "mousedown", "keydown", "touchstart", "pointerdown"].forEach(function(e) {
+            n(e, l, f)
+          })
+        }
+        w(n), self.perfMetrics = self.perfMetrics || {}, self.perfMetrics.onFirstInputDelay = function(n) {
+          c.push(n), s()
+        }
+      }(addEventListener, removeEventListener);
+		</script>
+	</head>
+	<body>
+		<div class="header">
+			<div>	
+				<h1>
+					<span class="material-icons">
+						chat
+					</span>
+					Chatter
+				</h1>
+			</div>
+			<div></div>
+			<div class="user-info">
+				<div></div>
+				<div hidden id="user-pic"></div>
+				<div hidden id="user-name"></div>
+				<button hidden id="sign-out" onclick="Chatter.Auth.signOut">
+					<h1>Sign-out</h1>
+				</button>
+        <button hidden id="sign-in" onclick="Chatter.Auth.signIn">
+        	<h1><i class="material-icons">account_circle</i>Sign-in with Google</h1>
+        </button>
+			</div>
+		</div>
+		<div class="sidebar" id="sidebar">
+		</div>
+		<div class="content" id="content" data-simplebar>
+			<span id="message-filler"></span>
+		</div>
+		<div class="input">
+			<section id="message-form">
+				<div class="container" id="cont">
+					<button class="attach" onclick="mediaCaptureElement.click();">
+						<input id="mediaCapture" type="file" accept="image/*" capture="camera" style="display: none;">
+						<span class="material-icons">insert_photo</span>
+					</button>
+					<div id="msg-input" class="input-area" autocomplete="off" spellcheck="true" aria-expanded="false" aria-autocomplete="list" aria-multiline="true" contenteditable="true"></div>
+					<button disabled class="send" id="submit" onclick="onMessageFormSubmit()">
+						<span class="material-icons">send</span>
+					</button>
+				</div>
+      </section>
+		</div>
+		<!-- firebase libaries -->
+    <script src="https://rest-api-242421.firebaseapp.com/__/firebase/6.1.1/firebase-app.js"></script>
+    <script src="https://rest-api-242421.firebaseapp.com/__/firebase/6.1.1/firebase-auth.js"></script>
+    <script src="https://rest-api-242421.firebaseapp.com/__/firebase/6.1.1/firebase-storage.js"></script>
+    <script src="https://rest-api-242421.firebaseapp.com/__/firebase/6.1.1/firebase-messaging.js"></script>
+    <script src="https://rest-api-242421.firebaseapp.com/__/firebase/6.1.1/firebase-firestore.js"></script>
+    <script src="https://rest-api-242421.firebaseapp.com/__/firebase/6.1.1/firebase-performance.js"></script>
+    <script src="https://rest-api-242421.firebaseapp.com/__/firebase/init.js"></script>
+		<!-- extra libaries -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/showdown/1.9.0/showdown.min.js"></script>
+		<script src="https://unpkg.com/flakeid/dist/flakeid.min.js"></script>
+    <script src="//unpkg.com/string-similarity/umd/string-similarity.min.js"></script>
+		<!-- js -->
+		<script src="./scripts/chatter.js?Version=1.0.0""></script>
+		<script src="./scripts/main.js?Version=1.0.0"></script>
+		<script src="./scripts/helpers.js"></script>
+	</body>
+</html>
