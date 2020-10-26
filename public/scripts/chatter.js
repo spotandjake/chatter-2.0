@@ -2,8 +2,7 @@ let firestore = firebase.firestore(),
 auth = firebase.auth();
 
 let Member = (function () {
-	let Uid = Symbol();
-	let Last = Symbol();
+	let Uid = Symbol(), Last = Symbol();
   class Member {
     constructor(Userid, Serverid) {
       this[Uid] = Userid;
@@ -40,24 +39,16 @@ let Member = (function () {
 			return Math.round(timestamp / 1000).toString();
 		}
 		timeconvertback (timestamp) {
-			let date = new Date(timestamp * 1000),
-			datevalues = [
-				date.getFullYear(),
-				date.getMonth() + 1,
-				date.getDate(),
-				date.getHours(),
-				date.getMinutes(),
-				date.getSeconds(),
-			];
-			return datevalues;
+			let date = new Date(timestamp * 1000);
+			return [date.getFullYear(),date.getMonth() + 1,date.getDate(),date.getHours(),date.getMinutes(),date.getSeconds()];
 		}
   }
   return Member;
 })();
 let Server_Controller = (function () {
-	let Current_Server = Symbol();
-	let Server = Symbol();
-	let User = Symbol();
+	let Current_Server = Symbol(),
+    Server = Symbol(),
+    User = Symbol();
   class Server_Controller {
     constructor(Server_id) {
 			this[Current_Server] = Server_id;
@@ -73,47 +64,40 @@ let Server_Controller = (function () {
 				name: name,
 				id: id.toString(),
 				owner: Chatter.Auth.UserName
-			}).catch(function (error) {
-				console.error('Error writing new message to Firebase Database', error);
-			});
+			}).catch(error => console.error('Error writing new message to Firebase Database', error));
 			this[User].collection(Chatter.Auth.UserName).doc("servers").collection("servers").doc(id).set({
 				name: name,
 				id: id
-			}).catch(function (error) {
-				console.error('Error writing new message to Firebase Database', error);
-			});
+			}).catch(error => console.error('Error writing new message to Firebase Database', error));
 			serverset();
 			this.Switch(id);
 		}
 		Switch(id) {
-			let els = document.getElementsByClassName('active');
-			while (els[0]) {
-				els[0].classList.remove('active')
-			}
+			document.querySelectorAll('.active').forEach(Elm => {
+        Elm.classList.remove('active');
+      });
 			this[Current_Server] = id.toString();
-			document.getElementById(`${id}`).className = "active";
-			document.getElementById("content").innerHTML = "";
+			document.getElementById(id).className = "active";
+			$("#content").innerHTML = "";
 			saveMessagingDeviceToken(true);
       
 			loadMessages(this[Current_Server]);
 		}
 		get Set() {
-			this[User].collection(Chatter.Auth.UserName).doc("info").get().then((docSnapshot) => {
+			this[User].collection(Chatter.Auth.UserName).doc("info").get().then(docSnapshot => {
 				if (docSnapshot.exists) {
-					this[User].collection(Chatter.Auth.UserName).doc("info").onSnapshot((doc) => {
+					this[User].collection(Chatter.Auth.UserName).doc("info").onSnapshot(doc => {
 						let usrid = doc.data().id;
 						let inhtml = [
 						`<a id="settings-sidebar">Settings</a>`, 
 						`<a id="${usrid}" onclick="Chatter.Server.Switch(${usrid})">Messages</a>`, 
 						`<a id="8914024429258424" onclick="Chatter.Server.Switch(this.id)" class="active">Global</a>`
 						];
-						let servs = this[User].collection(Chatter.Auth.UserName).doc("servers").collection("servers");
-						servs.get().then(function (querySnapshot) {
-							querySnapshot.forEach(function (doc) {
-								let str = '<a id="' + doc.data().id + '" onclick="Chatter.Server.Switch(this.id)">' + doc.data().name + '</a>';
-								inhtml.push(str);
+						this[User].collection(Chatter.Auth.UserName).doc("servers").collection("servers").get().then(querySnapshot => {
+							querySnapshot.forEach(doc => {
+								inhtml.push(`<a id="${doc.data().id}" onclick="Chatter.Server.Switch(this.id)">${doc.data().name}</a>`);
 							});
-							document.getElementById("sidebar").innerHTML = inhtml.join(",").replace(/,/g, " ");
+							$("#sidebar").innerHTML = inhtml.join(",").replace(/,/g, " ");
 						});
 					});
 				} else {
@@ -121,42 +105,34 @@ let Server_Controller = (function () {
 					this[User].collection(Chatter.Auth.UserName).doc("info").set({
 						name: Chatter.Auth.UserName,
 						id: Chatter.gen_id()
-					}).catch(function (error) {
-						console.error('Error writing new message to Firebase Database', error);
-					});
+					}).catch(error => console.error('Error writing new message to Firebase Database', error));
 					let inhtml = [
 						`<a id="settings-sidebar">Settings</a>`, 
 						`<a id="${usrid}" onclick="Chatter.Server.Switch(this.id)">Messages</a>`, 
 						`<a id="8914024429258424" onclick="Chatter.Server.Switch(this.id)" class="active">Global</a>`
 					];
 					let servs = this[User].collection(Chatter.Auth.UserName).doc("servers").collection("servers");
-					servs.get().then(function (querySnapshot) {
-						querySnapshot.forEach(function (doc) {
-							let str = `<a id="' + doc.data().id + '" onclick="Chatter.Server.Switch(this.id)">' + doc.data().name + '</a>`;
-							inhtml.push(str);
+					servs.get().then(querySnapshot => {
+						querySnapshot.forEach(doc => {
+							inhtml.push(`<a id="' + doc.data().id + '" onclick="Chatter.Server.Switch(this.id)">' + doc.data().name + '</a>`);
 						});
-						document.getElementById("sidebar").innerHTML = inhtml.join(",").replace(/,/g, " ");
+						$("#sidebar").innerHTML = inhtml.join(",").replace(/,/g, " ");
 					});
 				}
 			});
 		}
 		get Add() {
-			let value = document.getElementById('serverinput').value;
+			let value = $('#serverinput').value;
 			this[Server].collection(value).doc("info").get().then((docSnapshot) => {
 				if (docSnapshot.exists) {
-					console.log(doc.data().name);
 					let servername = doc.data().name;
 					this[User].collection(Chatter.Auth.UserName).doc("servers").collection("servers").doc(id).set({
 						name: doc.data().name,
 						id: value
-					}).catch(function (error) {
-						console.error('Error writing new message to Firebase Database', error);
-					});
+					}).catch(error => console.error('Error writing new message to Firebase Database', error));
 					this.Set;
 					this.Switch(value);
-				} else {
-					console.log("not exists");
-				}
+				} else console.log("not exists");
 			});
 		}
   }
@@ -167,11 +143,9 @@ let Auth_Controller = (function () {
     constructor() {}
 		//auth
 		get signIn() {
-			auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).then(function () {
+			auth.setPersistence(firebase.auth.Auth.Persistence.SESSION).then(() => {
 				auth.signInWithPopup(new firebase.auth.GoogleAuthProvider());
-			}).catch(function (error) {
-				console.log(error);
-			});
+			}).catch(error => console.log);
 		}
 		get signOut() {
 			auth.signOut();
@@ -184,18 +158,16 @@ let Auth_Controller = (function () {
 			return auth.currentUser.displayName;
 		}
 		get SignedIn() {
-			if (!!auth.currentUser) {
-				return true;
-			}
+			if (!!auth.currentUser) return true;
 			alert('You must sign-in first');
 			return false;
 		}
 		//observer
 		StateObserver(user) {
-      let signInButtonElement = document.getElementById('sign-in');
-      let signOutButtonElement = document.getElementById('sign-out');
-      let userPicElement = document.getElementById('user-pic');
-      let userNameElement = document.getElementById('user-name');
+      let signInButtonElement = $('#sign-in');
+      let signOutButtonElement = $('#sign-out');
+      let userPicElement = $('#user-pic');
+      let userNameElement = $('#user-name');
 			if (user) {
 				userPicElement.style.backgroundImage = 'url(' + addSizeToGoogleProfilePic(auth.currentUser.photoURL || '/images/profile_placeholder.png') + ')';
 				userNameElement.textContent = auth.currentUser.displayName;
@@ -215,5 +187,6 @@ let Auth_Controller = (function () {
   }
   return Auth_Controller;
 })();
+
 let Chatter = new Member('123456789', '8914024429258424');
 auth.onAuthStateChanged(Chatter.Auth.StateObserver);
